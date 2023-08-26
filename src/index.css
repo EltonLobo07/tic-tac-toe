@@ -1,3 +1,58 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: "Outfit";
+    src: 
+      url("./fonts/outfit-var-font-weight.woff2") format("woff2 supports variations"),
+      url("./fonts/outfit-var-font-weight.woff2") format("woff2-variations"),
+      url("./fonts/outfit-var-font-weight.woff") format("woff supports variations"),
+      url("./fonts/outfit-var-font-weight.woff") format("woff-variations");
+    font-weight: 100 900;
+    font-display: swap;
+  }
+
+  :root {
+    font-family: 
+      "Outfit", -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
+    --heading-font-weight: 700;
+  }
+
+  #root {
+    isolation: isolate;
+  }
+}
+
+@layer utilities {
+  .font-heading-l {
+    font-weight: var(--heading-font-weight);
+    font-size: 2.5rem; /* 40px */
+    letter-spacing: 0.15625rem; /* 2.5px */
+  }
+
+  .font-heading-m {
+    font-weight: var(--heading-font-weight);
+    font-size: 1.5rem; /* 24px */
+    letter-spacing: 0.09375rem; /* 1.5px */
+  }
+
+  .font-heading-s {
+    font-weight: var(--heading-font-weight);
+    font-size: 1.25rem; /* 20px */
+    letter-spacing: 0.078125rem; /* 1.25px */
+  }
+
+  .font-heading-xs {
+    font-weight: var(--heading-font-weight);
+    font-size: 1rem; /* 16px */
+    letter-spacing: 0.0625rem; /* 1px */
+  }
+
+  .font-body {
+    font-weight: 500;
+    font-size: 0.875; /* 14px */
+    letter-spacing: 0.05rem; /* 0.8px */
+  }
+}
