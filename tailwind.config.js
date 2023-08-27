@@ -5,6 +5,10 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
+    screens: {
+      tabAndUp: "34.375rem", // 550px
+      laptopAndUp: "68.75rem" // 1100px
+    },
     colors: {
       /*
         Format
