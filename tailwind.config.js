@@ -17,13 +17,24 @@ export default {
       "almost-black": "#1A2A33", // abyssal-anchorfish-blue
       "almost-black-green": "#1F3641", // into the night
       "dark-gray": "#A8BFC9", // winter sky
-      "light-gray": "#DBE8ED" // sidewalk chalk blue
+      "light-gray": "#DBE8ED", // sidewalk chalk blue,
+      "white": "#FFFFFF" // white
     },
+
     // So that I only use the typography class utilities defined in the root CSS file
     fontFamily: { },
     fontWeight: { },
     fontSize: { },
-    letterSpacing: { }
+    letterSpacing: { },
+
+    extend: {
+      padding: {
+        "24px": "24px"
+      },
+      gap: {
+        "8px": "8px"
+      }
+    }
   },
   plugins: [],
 }

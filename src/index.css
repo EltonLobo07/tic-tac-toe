@@ -20,6 +20,10 @@
     --heading-font-weight: 700;
   }
 
+  :root, body, #root {
+    height: 100%;
+  }
+
   #root {
     isolation: isolate;
   }

@@ -1,9 +1,21 @@
+import { MaxWidthWrapper } from "./components/MaxWidthWrapper";
+import { VisuallyHidden } from "./components/VisuallyHidden";
+
 export function App() {
   return (
     <div
-      className = "bg-light-yellow font-heading-l"
+      className = "h-full bg-almost-black relative"
     >
-      Hello world
+      <VisuallyHidden>
+        <header>
+          <h1>
+            tic tac toe game
+          </h1>
+        </header>
+      </VisuallyHidden>
+      <MaxWidthWrapper>
+        Todo
+      </MaxWidthWrapper>
     </div>
   );
 }
