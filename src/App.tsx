@@ -1,6 +1,6 @@
-import { Game } from "./components/Game";
+import { GameContent } from "./components/GameContent";
 import { MaxWidthWrapper } from "./components/MaxWidthWrapper";
-import { NewGameMenu } from "./components/NewGameMenu";
+import { NewGameMenuContent } from "./components/NewGameMenuContent";
 import { VisuallyHidden } from "./components/VisuallyHidden";
 import { useState } from "react";
 
@@ -8,6 +8,17 @@ type PlayerOneMark = "X" | "0" | null;
 
 export function App() {
   const [playerOneMark, setPlayerOneMark] = useState<PlayerOneMark>(null);
+
+  let sectionTitleAndContent = {
+    title: "new game menu",
+    content: <NewGameMenuContent />
+  }; 
+  if (playerOneMark !== null) {
+    sectionTitleAndContent = {
+      title: "game",
+      content: <GameContent />
+    };
+  }
 
   return (
     <div
@@ -21,13 +32,19 @@ export function App() {
         </header>
       </VisuallyHidden>
       <MaxWidthWrapper
-        className = "h-full flex py-24px"
+        className = "h-full"
       >
-        {
-          playerOneMark === null 
-          ? <NewGameMenu />
-          : <Game />
-        }
+        <section
+          aria-label = {sectionTitleAndContent.title}
+          className = "h-full flex py-24px relative"
+        >
+          <VisuallyHidden>
+            <h2>
+              {sectionTitleAndContent.title}
+            </h2>
+          </VisuallyHidden>
+          {sectionTitleAndContent.content}
+        </section>
       </MaxWidthWrapper>
     </div>
   );

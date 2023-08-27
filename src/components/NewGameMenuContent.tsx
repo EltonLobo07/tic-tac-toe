@@ -1,9 +1,9 @@
-export function NewGameMenu() {
+export function NewGameMenuContent() {
     return (
         <div
             className = "border border-white my-auto"
         >
-            TODO
+            Todo
         </div>
     );
 }
