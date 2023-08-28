@@ -1,5 +1,5 @@
 import { joinClasses } from "../helpers/general";
-import { GameType, PlayerOneMark } from "../type-helpers/app";
+import { GameType, Mark } from "../type-helpers/app";
 import { AppLogo } from "./AppLogo";
 import { Button } from "./Button";
 import { RadioBtn } from "./RadioBtn";
@@ -8,8 +8,8 @@ import { X } from "./X";
 import { Zero } from "./Zero";
 
 type Props = {
-    playerOneMark: PlayerOneMark,
-    onPlayerOneMarkChange: (newPlayerOneMark: PlayerOneMark) => void,
+    playerOneMark: Mark,
+    onPlayerOneMarkChange: (newMark: Mark) => void,
     setGameType: (gameType: GameType) => void
 };
 
@@ -21,7 +21,7 @@ export function NewGameMenuContent(props: Props) {
 
     const commonProps = {
         iconComponentClassNames: "w-8 h-8 mx-auto",
-        customRadioBtnName: "playerOneMark" 
+        customRadioBtnName: "Mark" 
     };
 
     const markSelectFieldsetLegendTxt = "pick player 1's mark"; 

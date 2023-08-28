@@ -5,4 +5,4 @@ export type KeyValueMap<
     [K in TKey]: TObj[K]
 };
 
-export type ValidChild = string | JSX.Element;
+export type ValidChild = string | JSX.Element | ValidChild[];

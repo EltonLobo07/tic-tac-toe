@@ -3,12 +3,12 @@ import { MaxWidthWrapper } from "./components/MaxWidthWrapper";
 import { NewGameMenuContent } from "./components/NewGameMenuContent";
 import { VisuallyHidden } from "./components/VisuallyHidden";
 import { useState } from "react";
-import { GameType, PlayerOneMark } from "./type-helpers/app";
+import { GameType, Mark } from "./type-helpers/app";
 
 type GameTypeState = GameType | "not selected";
 
 export function App() {
-  const [playerOneMark, setPlayerOneMark] = useState<PlayerOneMark>("X");
+  const [playerOneMark, setPlayerOneMark] = useState<Mark>("X");
   const [gameType, setGameType] = useState<GameTypeState>("not selected");
 
   let sectionTitleAndContent = {
@@ -21,8 +21,10 @@ export function App() {
   };
   if (gameType !== "not selected") {
     sectionTitleAndContent = {
-      title: "game",
-      content: <GameContent />
+      title: "game content",
+      content: <GameContent
+        playerOneMark = {playerOneMark}
+      />
     };
   }
 
