@@ -8,3 +8,7 @@ export function joinClasses(...classes: (string | boolean)[]): string {
     }
     return res.join(" ");
 }
+
+export function assertNever(_x: never, errorMsg: string) {
+    throw new Error(errorMsg);
+} 
