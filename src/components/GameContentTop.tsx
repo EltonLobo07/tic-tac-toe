@@ -20,7 +20,7 @@ function getPlayerOneMark(currentTurnMark: Mark, isPlayerOneTurn: boolean): Mark
     return "X";
 }
 
-export function GameContentHead(props: Props) {
+export function GameContentTop(props: Props) {
     const TurnIcon = props.currentTurnMark === "X" ? X : Zero;
 
     return (

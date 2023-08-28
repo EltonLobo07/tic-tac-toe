@@ -67,7 +67,7 @@ type Props = {
     onMovePlayed: (moveResult: MoveResult) => void
 };
 
-export function GameContentGrid(props: Props) {
+export function GameContentMid(props: Props) {
     const [gameState, setGameState] = useState<GameState>(() => new Array(NUM_CELLS).fill(""));
 
     const sectionTitle = "game grid";

@@ -24,6 +24,7 @@ export function App() {
       title: "game content",
       content: <GameContent
         playerOneMark = {playerOneMark}
+        gameType = {gameType}
       />
     };
   }
