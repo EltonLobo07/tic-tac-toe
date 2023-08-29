@@ -18,6 +18,10 @@
     font-family: 
       "Outfit", -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Ubuntu, roboto, noto, arial, sans-serif;
     --heading-font-weight: 700;
+    --box-shadow-y-neg-offset: -8px;
+    --box-shadow-offsets: 0 var(--box-shadow-y-neg-offset) 0 0;
+    --box-shadow-color: currentColor;
+    --box-shadow-inset: inset;
   }
 
   :root, body, #root {
@@ -56,7 +60,23 @@
 
   .font-body {
     font-weight: 500;
-    font-size: 0.875; /* 14px */
+    font-size: 0.875rem; /* 14px */
     letter-spacing: 0.05rem; /* 0.8px */
+  }
+
+  .box-shadow {
+    box-shadow: var(--box-shadow-offsets) var(--box-shadow-color) var(--box-shadow-inset);
+  }
+
+  .black-box-shadow {
+    --box-shadow-color: #10212A;
+  }
+
+  .yellow-box-shadow {
+    --box-shadow-color: #CC8B13;
+  }
+
+  .blue-box-shadow {
+    --box-shadow-color: #118C87;
   }
 }

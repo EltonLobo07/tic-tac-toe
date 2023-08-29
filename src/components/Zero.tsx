@@ -1,7 +1,7 @@
 import { getSvgAriaProps, getSvgPathStyleProps } from "../helpers/svg-icon-components";
 import { IconComponentProps } from "../type-helpers/svg-icon-components";
 
-const FILL = "#F2B137";
+const FILL = "currentColor";
 
 export function Zero(props: IconComponentProps) {
     return (

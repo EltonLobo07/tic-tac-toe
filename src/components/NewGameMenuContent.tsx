@@ -15,13 +15,19 @@ type Props = {
 
 export function NewGameMenuContent(props: Props) {
     const getMarkRadioBtnClassNames = (markSelected: boolean) => joinClasses(
-        "flex-grow border border-black",
-        markSelected && "bg-dark-yellow"
+        "flex-grow rounded-8px p-12px",
+        markSelected ? "bg-silver text-almost-black" : "bg-almost-black text-silver"
     );
 
     const commonProps = {
         iconComponentClassNames: "w-8 h-8 mx-auto",
-        customRadioBtnName: "Mark" 
+        customRadioBtnName: "Mark",
+        buttonClassNames: joinClasses(
+            "uppercase font-heading-xs text-almost-black",
+            "rounded-16px pt-[14px] pb-[calc(14px-var(--box-shadow-y-neg-offset))]",
+            "bg-white border-none",
+            "box-shadow"
+        ) 
     };
 
     const markSelectFieldsetLegendTxt = "pick player 1's mark"; 
@@ -30,22 +36,34 @@ export function NewGameMenuContent(props: Props) {
 
     return (
         <div
-            className = "border border-white my-auto flex flex-col gap-y-8 items-center"
+            className = "my-auto flex flex-col gap-y-8 tabAndUp:gap-y-10 items-center"
         >
             <AppLogo />
             <fieldset
-                className = "flex flex-col w-[25.75rem] capitalize p-24px bg-light-yellow relative"
+                className = {
+                    `
+                    relative
+                    rounded-16px
+                    flex flex-col items-center
+                    p-24px
+                    bg-almost-black-green 
+                    uppercase text-silver
+                    box-shadow black-box-shadow
+                    `
+                }
             >
                 <VisuallyHidden>
                     <legend>
                         {markSelectFieldsetLegendTxt}
                     </legend>
                 </VisuallyHidden>
-                <span>
+                <span
+                    className = "inline-block mb-6 font-heading-xs"
+                >
                     {markSelectFieldsetLegendTxt}
                 </span>
                 <div
-                    className = "flex"
+                    className = "flex border-8 border-almost-black rounded-12px w-[17.375rem] tabAndUp:w-[25.75rem] mb-[1.0625rem] bg-almost-black gap-x-1"
                 >
                     <RadioBtn 
                         label = "x"
@@ -70,17 +88,23 @@ export function NewGameMenuContent(props: Props) {
                         />
                     </RadioBtn>
                 </div>
-                <p>
+                <p
+                    className = "font-body opacity-50"
+                >
                     remember: x goes first
                 </p>
             </fieldset>
             <div
-                className = "flex flex-col gap-y-4 tabAndUp:gap-y-5 w-full text-white"
+                className = "flex flex-col gap-y-4 tabAndUp:gap-y-5 w-full"
             >
                 <Button
                     nativeBtnProps = {{
                         type: "button",
-                        onClick: () => props.setGameType("solo")
+                        onClick: () => props.setGameType("solo"),
+                        className: joinClasses(
+                            commonProps.buttonClassNames,
+                            "bg-dark-yellow yellow-box-shadow"
+                        )
                     }}
                 >
                     new game (vs cpu)
@@ -88,7 +112,11 @@ export function NewGameMenuContent(props: Props) {
                 <Button
                     nativeBtnProps = {{
                         type: "button",
-                        onClick: () => props.setGameType("multi")
+                        onClick: () => props.setGameType("multi"),
+                        className: joinClasses(
+                            commonProps.buttonClassNames,
+                            "bg-blue-more-green blue-box-shadow"
+                        )
                     }}
                 >
                     new game (vs player)

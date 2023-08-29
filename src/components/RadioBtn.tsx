@@ -20,7 +20,7 @@ export function RadioBtn(props: Props) {
             )}
         >
             <label
-                className = "w-full h-full absolute top-0 left-0"
+                className = "w-full h-full absolute top-0 left-0 rounded-inherit"
             >
                 <VisuallyHidden>
                     {props.label}
@@ -30,7 +30,7 @@ export function RadioBtn(props: Props) {
                     name = {props.name}
                     checked = {props.checked}
                     onChange = {props.onChange}
-                    className = "w-full h-full appearance-none"
+                    className = "w-full h-full appearance-none rounded-inherit"
                 />
             </label>
             <div

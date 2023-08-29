@@ -22,7 +22,8 @@ export default {
       "almost-black-green": "#1F3641", // into the night
       "dark-gray": "#A8BFC9", // winter sky
       "light-gray": "#DBE8ED", // sidewalk chalk blue,
-      "white": "#FFFFFF" // white
+      silver: "#A8BFC9", // silver
+      white: "#FFFFFF" // white
     },
 
     // So that I only use the typography class utilities defined in the root CSS file
@@ -33,10 +34,18 @@ export default {
 
     extend: {
       padding: {
+        "12px": "12px",
         "24px": "24px"
       },
       gap: {
         "8px": "8px"
+      },
+      borderRadius: {
+        "4px": "4px",
+        "8px": "8px",
+        "12px": "12px",
+        "16px": "16px",
+        "inherit": "inherit"
       }
     }
   },

@@ -11,17 +11,25 @@ export function AppLogo() {
 
     return (
         <div
-            className = "flex gap-x-8px relative"
+            className = "flex gap-x-2 relative"
         >
             <VisuallyHidden>
                 application logo
             </VisuallyHidden>
-            <X 
-                {...iconProps}
-            />
-            <Zero
-                {...iconProps}
-            />
+            <div
+                className = "text-blue-more-green"
+            >
+                <X 
+                    {...iconProps}
+                />
+            </div>
+            <div
+                className = "text-dark-yellow"
+            >
+                <Zero
+                    {...iconProps}
+                />
+            </div>
         </div>
     );
 }
