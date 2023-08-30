@@ -1,6 +1,7 @@
 import { assertNever } from "../helpers/general";
 import { GameType, Mark } from "../type-helpers/app";
 import { Stats } from "../type-helpers/game-content";
+import { Dialog } from "./Dialog";
 import { GameContentBottom } from "./GameContentBottom";
 import { GameContentMid } from "./GameContentMid";
 import { GameContentTop } from "./GameContentTop";
@@ -16,6 +17,7 @@ type Props = {
 };
 
 export function GameContent(props: Props) {
+    const [openAlertDialog, setOpenAlertDialog] = useState(false);
     const [currentTurnMark, setCurrentTurnMark] = useState<Mark>("X");
     const [stats, setStats] = useState<Stats>({
         playerOneWins: 0,
@@ -62,6 +64,24 @@ export function GameContent(props: Props) {
         <div
             className = "my-0 tabAndUp:my-auto px-4px"
         >
+            <Dialog
+                open = {openAlertDialog}
+                onClose = {() => setOpenAlertDialog(false)}
+                title = "test label"
+                description = "test description"
+            >
+                <button
+                    type = "button"
+                >
+                    Hello world
+                </button>
+            </Dialog>
+            <button
+                type = "button"
+                onClick = {() => setOpenAlertDialog(true)}
+            >
+                Open modal
+            </button>
             <GameContentTop
                 currentTurnMark = {currentTurnMark}
                 isPlayerOneTurn = {currentTurnMark === props.playerOneMark}

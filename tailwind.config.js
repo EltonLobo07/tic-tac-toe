@@ -30,7 +30,8 @@ export default {
       "dark-gray-hovered": "#A8BFC90D", // winter sky (alpha value changed to 0.5)
       "light-gray": "#DBE8ED", // sidewalk chalk blue,
       silver: "#A8BFC9", // silver
-      white: "#FFFFFF" // white
+      white: "#FFFFFF", // white
+      black: "#000000" // black
     },
 
     // So that I only use the typography class utilities defined in the root CSS file
