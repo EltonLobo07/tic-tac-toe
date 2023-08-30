@@ -27,11 +27,11 @@ export function GameContentTop(props: Props) {
 
     return (
         <div
-            className = "flex justify-between items-center mb-16 tabAndUp:mb-5"
+            className = "grid grid-cols-3 items-center mb-16 tabAndUp:mb-5"
         >
             <AppLogo />
             <div
-                className = "relative"
+                className = "relative justify-self-center"
             >
                 <span
                     aria-hidden
@@ -39,7 +39,7 @@ export function GameContentTop(props: Props) {
                         bg-almost-black-green
                         flex gap-x-3 items-center
                         text-silver
-                        px-[30px] pt-12px pb-18px
+                        px-[15px] tabAndUp:px-[30px] pt-8px tabAndUp:pt-12px pb-[14px] tabAndUp:pb-18px
                         box-shadow black-box-shadow box-shadow-small-y-offset
                         rounded-8px
                     `}
@@ -62,9 +62,10 @@ export function GameContentTop(props: Props) {
                 nativeBtnProps = {{
                     type: "button",
                     className: joinClasses(
+                        "justify-self-end",
                         "relative",
                         "p-16px rounded-8px",
-                        "bg-silver text-almost-black-green",
+                        "bg-silver hover:bg-light-gray text-almost-black-green",
                         "border-none",
                         "box-shadow silver-box-shadow box-shadow-small-y-offset"
                     )

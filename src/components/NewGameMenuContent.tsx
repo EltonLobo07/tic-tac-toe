@@ -7,6 +7,10 @@ import { VisuallyHidden } from "./VisuallyHidden";
 import { X } from "./X";
 import { Zero } from "./Zero";
 
+/*
+    padding: 24px 24px 30px 24px
+*/
+
 type Props = {
     playerOneMark: Mark,
     onPlayerOneMarkChange: (newMark: Mark) => void,
@@ -16,7 +20,7 @@ type Props = {
 export function NewGameMenuContent(props: Props) {
     const getMarkRadioBtnClassNames = (markSelected: boolean) => joinClasses(
         "flex-grow rounded-8px p-12px",
-        markSelected ? "bg-silver text-almost-black" : "bg-almost-black text-silver"
+        markSelected ? "bg-silver text-almost-black" : "bg-almost-black hover:bg-dark-gray-almost-transparent text-silver"
     );
 
     const commonProps = {
@@ -103,7 +107,7 @@ export function NewGameMenuContent(props: Props) {
                         onClick: () => props.setGameType("solo"),
                         className: joinClasses(
                             commonProps.buttonClassNames,
-                            "bg-dark-yellow yellow-box-shadow"
+                            "bg-dark-yellow hover:bg-light-yellow yellow-box-shadow"
                         )
                     }}
                 >
@@ -115,7 +119,7 @@ export function NewGameMenuContent(props: Props) {
                         onClick: () => props.setGameType("multi"),
                         className: joinClasses(
                             commonProps.buttonClassNames,
-                            "bg-blue-more-green blue-box-shadow"
+                            "bg-blue-more-green hover:bg-green-more-blue blue-box-shadow"
                         )
                     }}
                 >

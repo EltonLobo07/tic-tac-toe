@@ -99,7 +99,8 @@ export function GameContentMid(props: Props) {
                     onClick: () => onBtnClick(cellNum),
                     className: joinClasses(
                         "relative",
-                        "w-24 h-24 tabAndUp:w-[8.75rem] tabAndUp:h-[8.75rem]",
+                        "justify-self-stretch",
+                        "min-w-24 h-24 tabAndUp:min-w-[8.75rem] tabAndUp:h-[8.75rem]",
                         "flex justify-center items-center",
                         "box-shadow black-box-shadow",
                         "border-none",
@@ -112,7 +113,7 @@ export function GameContentMid(props: Props) {
                 {
                     CellIcon
                     ? <CellIcon 
-                        className = "translate-y-[calc(var(--box-shadow-y-neg-offset)/2)] w-[2.5rem] h-[2.5rem] tabAndUp:w-16 tabAndUp:h-16" 
+                        className = "translate-y-[calc(var(--box-shadow-y-neg-offset)/2)] w-10 h-10 tabAndUp:w-16 tabAndUp:h-16" 
                       />
                     : (
                         <VisuallyHidden>

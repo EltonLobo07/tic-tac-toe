@@ -27,7 +27,7 @@ export function GameContentBottom(props: Props) {
         "rounded-16px py-12px",
         "font-body"
     );
-    const commonNumClassNames = "font-heading-s";
+    const commonNumClassNames = "font-heading-m";
 
     return (
         <section
