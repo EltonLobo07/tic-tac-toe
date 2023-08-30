@@ -45,7 +45,7 @@ export function NewGameMenuContent(props: Props) {
                     relative
                     rounded-16px
                     flex flex-col items-center
-                    p-24px
+                    p-16px mobileAndUp:p-24px
                     bg-almost-black-green 
                     uppercase text-silver
                     box-shadow black-box-shadow

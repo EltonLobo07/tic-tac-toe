@@ -11,7 +11,7 @@ export function MaxWidthWrapper(props: Props) {
         <div
             className = {twMerge(
                 props.className,
-                "px-24px max-w-fit mx-auto"
+                "max-w-fit mx-auto"
             )}
         >
             {props.children}

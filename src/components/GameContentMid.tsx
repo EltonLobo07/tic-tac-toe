@@ -127,7 +127,7 @@ export function GameContentMid(props: Props) {
     return (
         <section
             aria-label = {sectionTitle}
-            className = "relative grid grid-cols-3 gap-5 mb-5"
+            className = "relative grid grid-cols-3 gap-x-3 mobileAndUp:gap-x-5 gap-y-5 mb-5"
         >
             <VisuallyHidden>
                 <h3>

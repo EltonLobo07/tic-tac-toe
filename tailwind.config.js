@@ -6,6 +6,11 @@ export default {
   ],
   theme: {
     screens: {
+      /*
+        The view breaks when the width of the viewport is less than 375px
+        The minimum viewport width this application will support will be 320px
+      */
+      mobileAndUp: "23.4375rem", // 375px
       tabAndUp: "34.375rem", // 550px
       laptopAndUp: "68.75rem" // 1100px
     },
@@ -34,6 +39,7 @@ export default {
 
     extend: {
       padding: {
+        "4px": "4px",
         "6px": "6px",
         "12px": "12px",
         "16px": "16px",
