@@ -79,4 +79,19 @@
   .blue-box-shadow {
     --box-shadow-color: #118C87;
   }
+
+  .silver-box-shadow {
+    --box-shadow-color: #6B8997;
+  }
+
+  .box-shadow-small-y-offset {
+    --box-shadow-y-neg-offset: -4px;
+    /* 
+      The negative offset is used only when I redefine the box-shadow-offsets variable, 
+      defeats the prupose of CSS variables 
+
+      This is a temporary fix
+    */
+    --box-shadow-offsets: 0 var(--box-shadow-y-neg-offset) 0 0;
+  }
 }

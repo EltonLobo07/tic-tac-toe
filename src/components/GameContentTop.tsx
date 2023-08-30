@@ -1,6 +1,8 @@
+import { joinClasses } from "../helpers/general";
 import { Mark } from "../type-helpers/app";
 import { AppLogo } from "./AppLogo";
 import { Button } from "./Button";
+import { Restart } from "./Restart";
 import { VisuallyHidden } from "./VisuallyHidden";
 import { X } from "./X";
 import { Zero } from "./Zero";
@@ -25,7 +27,7 @@ export function GameContentTop(props: Props) {
 
     return (
         <div
-            className = "border border-white"
+            className = "flex justify-between items-center mb-16 tabAndUp:mb-5"
         >
             <AppLogo />
             <div
@@ -33,11 +35,21 @@ export function GameContentTop(props: Props) {
             >
                 <span
                     aria-hidden
+                    className = {`
+                        bg-almost-black-green
+                        flex gap-x-3 items-center
+                        text-silver
+                        px-[30px] pt-12px pb-18px
+                        box-shadow black-box-shadow box-shadow-small-y-offset
+                        rounded-8px
+                    `}
                 >
                     <TurnIcon 
                         className = "w-5 h-5"
                     />
-                    <span>
+                    <span
+                        className = "uppercase font-heading-xs"
+                    >
                         turn
                     </span>
                 </span>
@@ -48,10 +60,23 @@ export function GameContentTop(props: Props) {
             </div>
             <Button
                 nativeBtnProps = {{
-                    type: "button"
+                    type: "button",
+                    className: joinClasses(
+                        "relative",
+                        "p-16px rounded-12px",
+                        "bg-silver text-almost-black-green",
+                        "border-none",
+                        "box-shadow silver-box-shadow box-shadow-small-y-offset"
+                    )
                 }}
             >
-                reset
+                <Restart 
+                    ariaHidden
+                    className = "w-5 h-5"
+                />
+                <VisuallyHidden>
+                    restart game
+                </VisuallyHidden>
             </Button>
         </div>
     );

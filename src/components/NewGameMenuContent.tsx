@@ -89,7 +89,7 @@ export function NewGameMenuContent(props: Props) {
                     </RadioBtn>
                 </div>
                 <p
-                    className = "font-body opacity-50"
+                    className = "font-body opacity-50 pb-6px"
                 >
                     remember: x goes first
                 </p>
