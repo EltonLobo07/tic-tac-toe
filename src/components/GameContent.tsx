@@ -60,7 +60,7 @@ export function GameContent(props: Props) {
 
     return (
         <div
-            className = "border border-white my-0 tabAndUp:my-auto"
+            className = "my-0 tabAndUp:my-auto"
         >
             <GameContentTop
                 currentTurnMark = {currentTurnMark}

@@ -63,7 +63,7 @@ export function GameContentTop(props: Props) {
                     type: "button",
                     className: joinClasses(
                         "relative",
-                        "p-16px rounded-12px",
+                        "p-16px rounded-8px",
                         "bg-silver text-almost-black-green",
                         "border-none",
                         "box-shadow silver-box-shadow box-shadow-small-y-offset"
