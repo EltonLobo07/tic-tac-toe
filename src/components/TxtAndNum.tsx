@@ -1,23 +1,34 @@
+import { twMerge } from "tailwind-merge";
 import { VisuallyHidden } from "./VisuallyHidden";
 
 type Props = {
     displayTxt: string,
     actualTxt: string,
-    num: number
+    num: number,
+    className?: string,
+    displayTxtContainerClassName?: string,
+    numContainerClassName?: string
 };
 
 export function TxtAndNum(props: Props) {
     return (
         <div
-            className = "relative flex flex-col"
+            className = {twMerge(
+                "relative flex flex-col",
+                props.className
+            )}
         >
             <VisuallyHidden>
                 {props.actualTxt}
             </VisuallyHidden>
-            <span>
+            <span
+                className = {props.displayTxtContainerClassName}
+            >
                 {props.displayTxt}
             </span>
-            <span>
+            <span
+                className = {props.numContainerClassName}
+            >
                 {props.num}
             </span>
         </div>
