@@ -9,7 +9,7 @@ type BaseSerializable =
     | number 
     | boolean 
     | null 
-    | Array<any>;
+    | Array<unknown>;
 
 type Serializable = 
     | BaseSerializable 
@@ -17,6 +17,7 @@ type Serializable =
 
 type Args<TState> = {
     initialState: TState | (() => TState),
+    isState: (possibleState: unknown) => possibleState is TState,
     lsKey: string
 };
 
@@ -30,7 +31,10 @@ export function useLocalStorageState<TState extends Serializable>(args: Args<TSt
     const [state, setState] = useState(() => {
         const stateInLs = window.localStorage.getItem(concatPrefix(args.lsKey));
         if (stateInLs !== null) {
-            return JSON.parse(stateInLs);
+            const possibleState = JSON.parse(stateInLs);
+            if (args.isState(possibleState)) {
+                return possibleState;
+            }
         }
         return typeof args.initialState === "function" ? args.initialState() : args.initialState;
     });
@@ -49,5 +53,5 @@ export function useLocalStorageState<TState extends Serializable>(args: Args<TSt
         };
     }, []);
 
-    return [state, setState];
+    return [state, setState] as const;
 }

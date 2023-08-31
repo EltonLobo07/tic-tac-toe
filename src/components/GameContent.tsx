@@ -5,10 +5,15 @@ import { Dialog, DialogProps } from "./Dialog";
 import { GameContentBottom } from "./GameContentBottom";
 import { GameContentMid } from "./GameContentMid";
 import { GameContentTop } from "./GameContentTop";
-import { useState, useEffect } from "react";
 import { YesNoBtns, YesNoBtnsProps } from "./YesNoBtns";
 import { X } from "./X";
 import { Zero } from "./Zero";
+/*
+import { useLocalStorageState } from "../custom-hooks/useLocalStorageState";
+import { isMark } from "../helpers/app";
+import { isStats } from "../helpers/game-content";
+*/
+import { useState } from "react";
 
 function getPlayerWonKey(wonMark: Mark, playerOneMark: Mark): keyof Stats {
     return wonMark === playerOneMark ? "playerOneWins" : "playerTwoWins";
@@ -21,17 +26,19 @@ function getWinLoseMsg(isSoloGame: boolean, didPlayerOneWin: boolean): string {
     return `player ${didPlayerOneWin ? "1" : "2"} wins!`;
 }
 
-function didXWin(winnerStr: WinnerStr): boolean {
+function didXWin(winnerStr: `winner-${Mark}`): boolean {
     return winnerStr[winnerStr.length - 1].toLowerCase() === "x";
 }
 
-type WinnerStr = `winner-${Mark}`;
+const MODAL = [
+    "restart",
+    "winner-X",
+    "winner-0",
+    "tie",
+    "none"
+] as const;
 
-type Modal = 
-    | "restart"
-    | WinnerStr
-    | "tie"
-    | "none";
+type Modal = typeof MODAL[number];
 
 type Props = {
     playerOneMark: Mark,
@@ -51,19 +58,49 @@ export function GameContent(props: Props) {
         playerTwoWins: 0
     });
 
-    useEffect(() => {
-        const stateInLs = window.localStorage.getItem("uewk")
-        console.log(stateInLs, typeof stateInLs);
-    }, []);
+    /*
+    const [openModalType, setOpenModalType] = useLocalStorageState<Modal>({
+        initialState: "none",
+        lsKey: "openModalType",
+        isState: (possibleState): possibleState is Modal => MODAL.find(modalStr => modalStr === possibleState) !== undefined
+    });
+    const [initialTurnMark, setInitialTurnMark] = useLocalStorageState<Mark>({
+        initialState: "X",
+        lsKey: "initialTurnMark",
+        isState: isMark
+    });
+    const [currentTurnMark, setCurrentTurnMark] = useLocalStorageState<Mark>({
+        initialState: initialTurnMark,
+        lsKey: "currentTurnMark",
+        isState: isMark
+    });
+    // This state will be used to reset the game grid's state
+    const [gameGridKey, setGameGridKey] = useLocalStorageState({
+        initialState: Date.now(),
+        lsKey: "gameGridKey",
+        isState: (possibleState): possibleState is number => typeof possibleState === "number" && possibleState > 0
+    });
+    const [stats, setStats] = useLocalStorageState<Stats>({
+        initialState: {
+            playerOneWins: 0,
+            ties: 0,
+            playerTwoWins: 0
+        },
+        lsKey: "stats",
+        isState: isStats
+    });
+    */
+
+    const resetGameGridState = () => setGameGridKey(Date.now());
 
     const handleRestart = () => {
-        setGameGridKey(Date.now());
+        resetGameGridState();
         setCurrentTurnMark(initialTurnMark);
         closeModal();
     };
 
     const handleNextRound = () => {
-        setGameGridKey(Date.now());
+        resetGameGridState();
         const newInitialTurnMark = initialTurnMark === "X" ? "0" : "X";
         setInitialTurnMark(newInitialTurnMark);
         setCurrentTurnMark(newInitialTurnMark);

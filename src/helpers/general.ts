@@ -1,5 +1,5 @@
 export function joinClasses(...classes: (string | boolean)[]): string {
-    let res: string[] = [];
+    const res: string[] = [];
     for (let i = 0; i < classes.length; i += 1) {
         const curClass = classes[i];
         if (typeof curClass === "string" && curClass) {
@@ -11,6 +11,10 @@ export function joinClasses(...classes: (string | boolean)[]): string {
 
 export function assertNever(_x: never, errorMsg: string) {
     throw new Error(errorMsg);
+}
+
+export function removeKeyFromLS(key: string) {
+    window.localStorage.removeItem(key);
 } 
 
 /*

@@ -1,11 +1,12 @@
 import { Mark } from "../type-helpers/app";
 import { Button } from "./Button";
 import { VisuallyHidden } from "./VisuallyHidden";
-import { useState } from "react";
 import { X } from "./X";
 import { Zero } from "./Zero";
 import { assertNever, joinClasses } from "../helpers/general";
 import { MoveResult } from "../type-helpers/game-content";
+// import { useLocalStorageState } from "../custom-hooks/useLocalStorageState";
+import { useState } from "react";
 
 type PossibleMark = Mark | "";
 type GameState = PossibleMark[];
@@ -69,6 +70,16 @@ type Props = {
 
 export function GameContentMid(props: Props) {
     const [gameState, setGameState] = useState<GameState>(() => new Array(NUM_CELLS).fill(""));
+    /*
+    const [gameState, setGameState] = useLocalStorageState<GameState>({
+        initialState: new Array(NUM_CELLS).fill(""),
+        lsKey: "gameState",
+        isState: (possibleState): possibleState is GameState => (
+            Array.isArray(possibleState) &&
+            possibleState.find(cellState => cellState !== "X" || cellState !== "0" || cellState !== "") !== undefined
+        ) 
+    });
+    */
 
     const sectionTitle = "game grid";
 
