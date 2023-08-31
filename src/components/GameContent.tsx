@@ -5,7 +5,7 @@ import { Dialog, DialogProps } from "./Dialog";
 import { GameContentBottom } from "./GameContentBottom";
 import { GameContentMid } from "./GameContentMid";
 import { GameContentTop } from "./GameContentTop";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { YesNoBtns, YesNoBtnsProps } from "./YesNoBtns";
 import { X } from "./X";
 import { Zero } from "./Zero";
@@ -43,13 +43,18 @@ export function GameContent(props: Props) {
     const [openModalType, setOpenModalType] = useState<Modal>("none");
     const [initialTurnMark, setInitialTurnMark] = useState<Mark>("X");
     const [currentTurnMark, setCurrentTurnMark] = useState<Mark>(initialTurnMark);
-    // This state will be used to resset the game grid's state
+    // This state will be used to reset the game grid's state
     const [gameGridKey, setGameGridKey] = useState(Date.now());
     const [stats, setStats] = useState<Stats>({
         playerOneWins: 0,
         ties: 0,
         playerTwoWins: 0
     });
+
+    useEffect(() => {
+        const stateInLs = window.localStorage.getItem("uewk")
+        console.log(stateInLs, typeof stateInLs);
+    }, []);
 
     const handleRestart = () => {
         setGameGridKey(Date.now());
