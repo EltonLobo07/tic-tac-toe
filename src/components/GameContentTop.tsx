@@ -9,7 +9,8 @@ import { Zero } from "./Zero";
 
 type Props = {
     currentTurnMark: Mark,
-    isPlayerOneTurn: boolean
+    isPlayerOneTurn: boolean,
+    onRestart: () => void
 };
 
 function getPlayerOneMark(currentTurnMark: Mark, isPlayerOneTurn: boolean): Mark {
@@ -68,7 +69,8 @@ export function GameContentTop(props: Props) {
                         "bg-silver hover:bg-light-gray text-almost-black-green",
                         "border-none",
                         "box-shadow silver-box-shadow box-shadow-small-y-offset"
-                    )
+                    ),
+                    onClick: () => props.onRestart()
                 }}
             >
                 <Restart 

@@ -1,14 +1,15 @@
 import { Dialog as HUIDialog } from '@headlessui/react';
 import { ValidChild } from '../type-helpers/general';
-import { VisuallyHidden } from './VisuallyHidden';
+import { twMerge } from 'tailwind-merge';
 
 type Props = {
     open: boolean,
     onClose: () => void,
-    title: string,
-    description?: string,
-    children: ValidChild
+    children: ValidChild,
+    className?: string
 };
+
+export type DialogProps = Props;
 
 export function Dialog(props: Props) {
     return (
@@ -23,24 +24,17 @@ export function Dialog(props: Props) {
                 className = "fixed inset-0 flex items-center"
             >
                 <HUIDialog.Panel
-                    className = "w-full bg-almost-black-green relative"
+                    className = {twMerge(
+                        "w-full bg-almost-black-green relative",
+                        props.className
+                    )}
                 >
-                    <VisuallyHidden>
-                        <HUIDialog.Title>
-                            {props.title}
-                        </HUIDialog.Title>
-                        {
-                            props.description
-                            ?? (
-                                <HUIDialog.Description>
-                                    {props.description}
-                                </HUIDialog.Description>
-                            )
-                        }
-                    </VisuallyHidden>
                     {props.children}
                 </HUIDialog.Panel>
             </div>
         </HUIDialog>
     );
 }
+
+Dialog.Title = HUIDialog.Title;
+Dialog.Description = HUIDialog.Description;

@@ -5,11 +5,11 @@ import { VisuallyHidden } from "./components/VisuallyHidden";
 import { useState } from "react";
 import { GameType, Mark } from "./type-helpers/app";
 
-type GameTypeState = GameType | "not selected";
+type GameTypeState = GameType | "not-selected";
 
 export function App() {
   const [playerOneMark, setPlayerOneMark] = useState<Mark>("X");
-  const [gameType, setGameType] = useState<GameTypeState>("not selected");
+  const [gameType, setGameType] = useState<GameTypeState>("not-selected");
 
   let sectionTitleAndContent = {
     title: "new game menu",
@@ -19,20 +19,16 @@ export function App() {
       setGameType = {setGameType}
     />
   };
-  if (gameType !== "not selected") {
+  if (gameType !== "not-selected") {
     sectionTitleAndContent = {
       title: "game content",
       content: <GameContent
         playerOneMark = {playerOneMark}
         gameType = {gameType}
+        onQuit = {() => setGameType("not-selected")}
       />
     };
   }
-
-  console.log(JSON.stringify({
-    playerOneMark,
-    gameType
-  }));
 
   return (
     <div

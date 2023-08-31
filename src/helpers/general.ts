@@ -12,3 +12,16 @@ export function joinClasses(...classes: (string | boolean)[]): string {
 export function assertNever(_x: never, errorMsg: string) {
     throw new Error(errorMsg);
 } 
+
+/*
+type Fn = (...args: any[]) => any; 
+export function fnCompose<
+    TFn extends Fn, 
+    TFnAlwaysCall extends Fn
+>(fn: TFn, fnAlwaysCallAtTheEnd: TFnAlwaysCall, ...fnAlwaysCallArgs: Parameters<TFnAlwaysCall>) {
+    return (...args: Parameters<TFn>) => {
+        fn(...args);
+        fnAlwaysCallAtTheEnd(...fnAlwaysCallArgs);
+    };
+}
+*/
