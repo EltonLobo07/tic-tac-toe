@@ -1,6 +1,6 @@
 import { assertNever, joinClasses } from "../helpers/general";
 import { GameType, Mark } from "../type-helpers/app";
-import { Stats } from "../type-helpers/game-content";
+import { GameGridState, Stats } from "../type-helpers/game-content";
 import { Dialog, DialogProps } from "./Dialog";
 import { GameContentBottom } from "./GameContentBottom";
 import { GameContentMid } from "./GameContentMid";
@@ -13,7 +13,8 @@ import { useLocalStorageState } from "../custom-hooks/useLocalStorageState";
 import { isMark } from "../helpers/app";
 import { isStats } from "../helpers/game-content";
 */
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { INITIAL_GRID_STATE, toggleMark } from "../helpers/game-content";
 
 function getPlayerWonKey(wonMark: Mark, playerOneMark: Mark): keyof Stats {
     return wonMark === playerOneMark ? "playerOneWins" : "playerTwoWins";
@@ -46,12 +47,22 @@ type Props = {
     onQuit: () => void
 };
 
+type GameState = {
+    grid: GameGridState,
+    initialTurnMark: Mark,
+    currentTurnMark: Mark 
+};
+
 export function GameContent(props: Props) {
+    const [gameState, setGameState] = useState<GameState>(() => {
+        const initialTurnMark = "X";
+        return {
+            grid: INITIAL_GRID_STATE,
+            initialTurnMark,
+            currentTurnMark: initialTurnMark
+        };
+    });
     const [openModalType, setOpenModalType] = useState<Modal>("none");
-    const [initialTurnMark, setInitialTurnMark] = useState<Mark>("X");
-    const [currentTurnMark, setCurrentTurnMark] = useState<Mark>(initialTurnMark);
-    // This state will be used to reset the game grid's state
-    const [gameGridKey, setGameGridKey] = useState(Date.now());
     const [stats, setStats] = useState<Stats>({
         playerOneWins: 0,
         ties: 0,
@@ -91,23 +102,40 @@ export function GameContent(props: Props) {
     });
     */
 
-    const resetGameGridState = () => setGameGridKey(Date.now());
+    const setGameStateWrapper = useCallback(
+        (
+            newGameState: Partial<GameState> | ((prevGameState: GameState) => Partial<GameState>)
+        ) => {
+            return setGameState(prevGameState => ({
+                ...prevGameState,
+                ...(typeof newGameState === "function" ? newGameState(prevGameState) : newGameState)
+            }));
+        }, 
+    []);
+
+    const isPlayerOneTurn = gameState.currentTurnMark === props.playerOneMark;
 
     const handleRestart = () => {
-        resetGameGridState();
-        setCurrentTurnMark(initialTurnMark);
+        setGameStateWrapper(prevGameState => ({
+            grid: INITIAL_GRID_STATE, 
+            currentTurnMark: prevGameState.initialTurnMark
+        }));
         closeModal();
     };
 
     const handleNextRound = () => {
-        resetGameGridState();
-        const newInitialTurnMark = initialTurnMark === "X" ? "0" : "X";
-        setInitialTurnMark(newInitialTurnMark);
-        setCurrentTurnMark(newInitialTurnMark);
+        setGameStateWrapper(prevGameState => {
+            const newInitialTurnMark = toggleMark(prevGameState.initialTurnMark);
+            return {
+                grid: INITIAL_GRID_STATE,
+                initialTurnMark: newInitialTurnMark,
+                currentTurnMark: newInitialTurnMark
+            }
+        });
         closeModal();
     };
 
-    const handleMovePlayed = (moveResult: Mark | "" | "draw") => {
+    const handleMovePlayed = useCallback((grid: GameGridState, moveResult: Mark | "" | "draw") => {
         /*
             If moveResult is,
                 "X"    - X is the winner
@@ -115,32 +143,34 @@ export function GameContent(props: Props) {
                 ""     - game continues
                 "draw" - game draw
         */
-       switch (moveResult) {
+       
+        setGameStateWrapper({grid});
+        switch (moveResult) {
             case "": {
-                return setCurrentTurnMark(currentTurnMark === "X" ? "0" : "X");
+                return setGameStateWrapper(prevGameState => ({currentTurnMark: toggleMark(prevGameState.currentTurnMark)}));
             }
             case "X": {
                 const playerWonKey = getPlayerWonKey("X", props.playerOneMark);
-                setStats({...stats, [playerWonKey]: stats[playerWonKey] + 1});
+                setStats(stats => ({...stats, [playerWonKey]: stats[playerWonKey] + 1}));
                 setOpenModalType("winner-X");
                 return;
             } 
             case "0": {
                 const playerWonKey = getPlayerWonKey("0", props.playerOneMark);
-                setStats({...stats, [playerWonKey]: stats[playerWonKey] + 1}); 
+                setStats(stats => ({...stats, [playerWonKey]: stats[playerWonKey] + 1})); 
                 setOpenModalType("winner-0");
                 return;
             }
             case "draw": {
-                setStats({...stats, ties: stats.ties + 1});
+                setStats(stats => ({...stats, ties: stats.ties + 1}));
                 setOpenModalType("tie");
                 return;
             }
             default: {
                 assertNever(moveResult, `Not handled - moveResult type: ${moveResult}`);
             }
-       }
-    };
+        }
+    }, [props.playerOneMark, setGameStateWrapper]);
 
     const closeModal = () => setOpenModalType("none");
 
@@ -246,14 +276,15 @@ export function GameContent(props: Props) {
         >
             {modal}
             <GameContentTop
-                currentTurnMark = {currentTurnMark}
-                isPlayerOneTurn = {currentTurnMark === props.playerOneMark}
+                currentTurnMark = {gameState.currentTurnMark}
+                isPlayerOneTurn = {isPlayerOneTurn}
                 onRestart = {() => setOpenModalType("restart")}
             />
             <GameContentMid
-                key = {gameGridKey}
-                currentTurnMark = {currentTurnMark}
+                grid = {gameState.grid}
+                currentTurnMark = {gameState.currentTurnMark}
                 onMovePlayed = {handleMovePlayed}
+                isPlayerOneTurn = {isPlayerOneTurn}
             />
             <GameContentBottom
                 playerOneMark = {props.playerOneMark}

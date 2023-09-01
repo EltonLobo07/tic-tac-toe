@@ -4,15 +4,14 @@ import { VisuallyHidden } from "./VisuallyHidden";
 import { X } from "./X";
 import { Zero } from "./Zero";
 import { assertNever, joinClasses } from "../helpers/general";
-import { MoveResult } from "../type-helpers/game-content";
+import { GameGridState, MoveResult } from "../type-helpers/game-content";
 // import { useLocalStorageState } from "../custom-hooks/useLocalStorageState";
-import { useState } from "react";
+import { useCallback, useMemo } from "react";
+import { FlattenOneLvl } from "../type-helpers/general";
+import { getWinner } from "../helpers/game-content";
 
-type PossibleMark = Mark | "";
-type GameState = PossibleMark[];
-type MarkAndMarkTest = [Mark, (arg: number) => boolean];
-
-const NUM_CELLS = 9;
+type GameState = GameGridState;
+type PossibleMark = FlattenOneLvl<GameState>;
 
 function getCellIcon(mark: PossibleMark) {
     switch (mark) {
@@ -31,45 +30,14 @@ function getCellIcon(mark: PossibleMark) {
     }
 }
 
-function convertMarkToNum(mark: PossibleMark): number {
-    const isMarkXNum = Number(mark === "X");
-    return isMarkXNum + Number(mark === "0") * (1 - isMarkXNum) * (-1);
-}
-
-function getWinner(gameState: GameState): PossibleMark {
-    const rows = [0, 0, 0];
-    const cols = [0, 0, 0];
-    const diagonals = [0, 0];
-    for (let i = 0; i < 3; i += 1) {
-        rows[0] += convertMarkToNum(gameState[i]);
-        rows[1] += convertMarkToNum(gameState[3 + i]);
-        rows[2] += convertMarkToNum(gameState[6 + i]);
-        cols[0] += convertMarkToNum(gameState[3 * i]);
-        cols[1] += convertMarkToNum(gameState[3 * i + 1]);
-        cols[2] += convertMarkToNum(gameState[3 * i + 2]);
-        diagonals[0] += convertMarkToNum(gameState[4 * i]);
-        diagonals[1] += convertMarkToNum(gameState[2 + 2 * i]);
-    }
-    const tmp: MarkAndMarkTest[] = [
-        ["X", v => v === 3],
-        ["0", v => v === -3]
-    ];
-    for (let i = 0; i < tmp.length; i += 1) {
-        const test = tmp[i][1];
-        if (rows.some(test) || cols.some(test) || diagonals.some(test)) {
-            return tmp[i][0];
-        }
-    } 
-    return "";
-}
-
 type Props = {
+    grid: GameGridState
     currentTurnMark: Mark,
-    onMovePlayed: (moveResult: MoveResult) => void
+    onMovePlayed: (grid: GameGridState, moveResult: MoveResult) => void,
+    isPlayerOneTurn: boolean
 };
 
 export function GameContentMid(props: Props) {
-    const [gameState, setGameState] = useState<GameState>(() => new Array(NUM_CELLS).fill(""));
     /*
     const [gameState, setGameState] = useLocalStorageState<GameState>({
         initialState: new Array(NUM_CELLS).fill(""),
@@ -80,32 +48,36 @@ export function GameContentMid(props: Props) {
         ) 
     });
     */
+    
+    // Workaround eslint exhaustive dependency list complain - React Hook useCallback has a missing dependency: 'props'
+    const onBtnClickExtDeps = useMemo(() => {
+        return {currentTurnMark: props.currentTurnMark, onMovePlayed: props.onMovePlayed};
+    }, [props.currentTurnMark, props.onMovePlayed]);
 
-    const sectionTitle = "game grid";
-
-    const onBtnClick = (cellNum: number) => {
+    const onBtnClick = useCallback((cellNum: number) => {
         let totalMarks = 0;
         const newGameState: GameState = [];
-        for (let i = 0; i < gameState.length; i += 1) {
-            const mark = gameState[i];
+        for (let i = 0; i < props.grid.length; i += 1) {
+            const mark = props.grid[i];
             newGameState.push(mark);
             totalMarks += Number(mark !== "");
         }
-        newGameState[cellNum] = props.currentTurnMark;
+        newGameState[cellNum] = onBtnClickExtDeps.currentTurnMark;
         totalMarks += 1;
-        setGameState(newGameState);
-        props.onMovePlayed(totalMarks === gameState.length ? "draw" : getWinner(newGameState));
-    };
+        onBtnClickExtDeps.onMovePlayed(newGameState, totalMarks === props.grid.length ? "draw" : getWinner(newGameState));
+    }, [onBtnClickExtDeps, props.grid]);
+
+    const sectionTitle = "game grid";
 
     const cells: JSX.Element[] = [];
     // cellNum won't change, its safe to assign key to the index
-    for (let cellNum = 0; cellNum < NUM_CELLS; cellNum += 1) {
-        const CellIcon = getCellIcon(gameState[cellNum]);
+    for (let cellNum = 0; cellNum < props.grid.length; cellNum += 1) {
+        const CellIcon = getCellIcon(props.grid[cellNum]);
         cells.push(
             <Button
                 key = {cellNum}
                 nativeBtnProps = {{
-                    disabled: gameState[cellNum] !== "",
+                    disabled: props.grid[cellNum] !== "",
                     type: "button",
                     onClick: () => onBtnClick(cellNum),
                     className: joinClasses(
@@ -116,7 +88,7 @@ export function GameContentMid(props: Props) {
                         "box-shadow black-box-shadow",
                         "border-none",
                         "bg-almost-black-green",
-                        gameState[cellNum] === "X" ? "text-blue-more-green" : "text-dark-yellow",
+                        props.grid[cellNum] === "X" ? "text-blue-more-green" : "text-dark-yellow",
                         "rounded-16px"
                     )
                 }}

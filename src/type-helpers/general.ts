@@ -6,3 +6,5 @@ export type KeyValueMap<
 };
 
 export type ValidChild = string | JSX.Element | ValidChild[];
+
+export type FlattenOneLvl<T> = T extends Array<infer NT> ? NT : T;

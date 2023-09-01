@@ -17,6 +17,18 @@ export function removeKeyFromLS(key: string) {
     window.localStorage.removeItem(key);
 } 
 
+export function arrShallowEq<TArr extends unknown[]>(arr1: TArr, arr2: TArr): boolean {
+    if (arr1.length !== arr2.length) {
+        return false;
+    }
+    for (let i = 0; i < arr1.length; i += 1) {
+        if (arr1[i] !== arr2[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
 /*
 type Fn = (...args: any[]) => any; 
 export function fnCompose<

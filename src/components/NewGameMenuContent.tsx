@@ -7,10 +7,6 @@ import { VisuallyHidden } from "./VisuallyHidden";
 import { X } from "./X";
 import { Zero } from "./Zero";
 
-/*
-    padding: 24px 24px 30px 24px
-*/
-
 type Props = {
     playerOneMark: Mark,
     onPlayerOneMarkChange: (newMark: Mark) => void,
