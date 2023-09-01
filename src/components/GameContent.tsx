@@ -124,8 +124,9 @@ export function GameContent(props: Props) {
         newGrid[gridCellNum] = gameState.currentTurnMark;
         totalMarks += 1;
         setGameStateWrapper({grid: newGrid});
-        const gameTied = totalMarks === gameState.grid.length;
-        const moveResult = gameTied ? "draw" : getWinner(newGrid);
+        const winnerMark = getWinner(newGrid);
+        const gameTied = winnerMark === "" && totalMarks === gameState.grid.length;
+        const moveResult = gameTied ? "draw" : winnerMark;
         /*
             If moveResult is,
                 "X"    - X is the winner

@@ -70,12 +70,12 @@ function getMoveScore(
     markToUse: Mark,
     assignedMark: Mark
 ): number {
-    if (tieCheck(gameGridState)) {
-        return 0;
-    }
     const result = getWinner(gameGridState);
     if (result !== "") {
         return assignedMark === result ? 1 : -1;
+    }
+    if (tieCheck(gameGridState)) {
+        return 0;
     }
     let [res, aggrFn] = [-Infinity, Math.max];
     if (markToUse !== assignedMark) {
