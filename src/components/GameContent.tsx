@@ -309,6 +309,7 @@ export function GameContent(props: Props) {
                 currentTurnMark = {gameState.currentTurnMark}
                 onMovePlayed = {handleMovePlayed}
                 isPlayerOneTurn = {isPlayerOneTurn}
+                gameType = {props.gameType}
             />
             <GameContentBottom
                 playerOneMark = {props.playerOneMark}

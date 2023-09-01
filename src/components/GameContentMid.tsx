@@ -1,36 +1,14 @@
-import { Mark } from "../type-helpers/app";
-import { Button } from "./Button";
+import { GameType, Mark } from "../type-helpers/app";
 import { VisuallyHidden } from "./VisuallyHidden";
-import { X } from "./X";
-import { Zero } from "./Zero";
-import { assertNever, joinClasses } from "../helpers/general";
+import { joinClasses } from "../helpers/general";
 import { GameGridState } from "../type-helpers/game-content";
 // import { useLocalStorageState } from "../custom-hooks/useLocalStorageState";
-import { FlattenOneLvl } from "../type-helpers/general";
-
-type GameState = GameGridState;
-type PossibleMark = FlattenOneLvl<GameState>;
-
-function getCellIcon(mark: PossibleMark) {
-    switch (mark) {
-        case "X": {
-            return X;
-        } 
-        case "0": {
-            return Zero;
-        }
-        case "": {
-            return;
-        }
-        default: {
-            assertNever(mark, `Not handled type - mark: ${mark}`);
-        }
-    }
-}
+import { GameGridBtn } from "./GameGridBtn";
 
 type Props = {
     grid: GameGridState
     currentTurnMark: Mark,
+    gameType: GameType,
     onMovePlayed: (gridCellNum: number) => void,
     isPlayerOneTurn: boolean
 };
@@ -48,43 +26,32 @@ export function GameContentMid(props: Props) {
     */
 
     const sectionTitle = "game grid";
+    const machineTurn = props.gameType === "solo" && !props.isPlayerOneTurn;
 
     const cells: JSX.Element[] = [];
     // cellNum won't change, its safe to assign key to the index
     for (let cellNum = 0; cellNum < props.grid.length; cellNum += 1) {
-        const CellIcon = getCellIcon(props.grid[cellNum]);
         cells.push(
-            <Button
+            <GameGridBtn 
                 key = {cellNum}
+                hideIconOutline = {machineTurn}
+                markAssigned = {props.grid[cellNum]}
+                currentTurnMark = {props.currentTurnMark}
                 nativeBtnProps = {{
-                    disabled: props.grid[cellNum] !== "",
+                    disabled: props.grid[cellNum] !== "" || machineTurn,
                     type: "button",
                     onClick: () => props.onMovePlayed(cellNum),
                     className: joinClasses(
-                        "relative",
                         "justify-self-stretch",
                         "min-w-24 h-24 tabAndUp:min-w-[8.75rem] tabAndUp:h-[8.75rem]",
                         "flex justify-center items-center",
                         "box-shadow black-box-shadow",
                         "border-none",
                         "bg-almost-black-green",
-                        props.grid[cellNum] === "X" ? "text-blue-more-green" : "text-dark-yellow",
                         "rounded-16px"
-                    )
+                    ) 
                 }}
-            >
-                {
-                    CellIcon
-                    ? <CellIcon 
-                        className = "translate-y-[calc(var(--box-shadow-y-neg-offset)/2)] w-10 h-10 tabAndUp:w-16 tabAndUp:h-16" 
-                      />
-                    : (
-                        <VisuallyHidden>
-                            change grid button's state to {props.currentTurnMark}
-                        </VisuallyHidden>
-                    )  
-                }
-            </Button>
+            />
         );
     }
 
