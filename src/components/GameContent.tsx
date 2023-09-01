@@ -13,8 +13,8 @@ import { useLocalStorageState } from "../custom-hooks/useLocalStorageState";
 import { isMark } from "../helpers/app";
 import { isStats } from "../helpers/game-content";
 */
-import { useState, useCallback } from "react";
-import { INITIAL_GRID_STATE, toggleMark } from "../helpers/game-content";
+import { useState, useCallback, useEffect } from "react";
+import { INITIAL_GRID_STATE, getNxtMove, getWinner, toggleMark } from "../helpers/game-content";
 
 function getPlayerWonKey(wonMark: Mark, playerOneMark: Mark): keyof Stats {
     return wonMark === playerOneMark ? "playerOneWins" : "playerTwoWins";
@@ -113,29 +113,19 @@ export function GameContent(props: Props) {
         }, 
     []);
 
-    const isPlayerOneTurn = gameState.currentTurnMark === props.playerOneMark;
-
-    const handleRestart = () => {
-        setGameStateWrapper(prevGameState => ({
-            grid: INITIAL_GRID_STATE, 
-            currentTurnMark: prevGameState.initialTurnMark
-        }));
-        closeModal();
-    };
-
-    const handleNextRound = () => {
-        setGameStateWrapper(prevGameState => {
-            const newInitialTurnMark = toggleMark(prevGameState.initialTurnMark);
-            return {
-                grid: INITIAL_GRID_STATE,
-                initialTurnMark: newInitialTurnMark,
-                currentTurnMark: newInitialTurnMark
-            }
-        });
-        closeModal();
-    };
-
-    const handleMovePlayed = useCallback((grid: GameGridState, moveResult: Mark | "" | "draw") => {
+    const handleMovePlayed = useCallback((gridCellNum: number) => {
+        let totalMarks = 0;
+        const newGrid: GameGridState = [];
+        for (let i = 0; i < gameState.grid.length; i += 1) {
+            const mark = gameState.grid[i];
+            newGrid.push(mark);
+            totalMarks += Number(mark !== "");
+        }
+        newGrid[gridCellNum] = gameState.currentTurnMark;
+        totalMarks += 1;
+        setGameStateWrapper({grid: newGrid});
+        const gameTied = totalMarks === gameState.grid.length;
+        const moveResult = gameTied ? "draw" : getWinner(newGrid);
         /*
             If moveResult is,
                 "X"    - X is the winner
@@ -143,11 +133,9 @@ export function GameContent(props: Props) {
                 ""     - game continues
                 "draw" - game draw
         */
-       
-        setGameStateWrapper({grid});
         switch (moveResult) {
             case "": {
-                return setGameStateWrapper(prevGameState => ({currentTurnMark: toggleMark(prevGameState.currentTurnMark)}));
+                return setGameStateWrapper({currentTurnMark: toggleMark(gameState.currentTurnMark)});
             }
             case "X": {
                 const playerWonKey = getPlayerWonKey("X", props.playerOneMark);
@@ -170,7 +158,42 @@ export function GameContent(props: Props) {
                 assertNever(moveResult, `Not handled - moveResult type: ${moveResult}`);
             }
         }
-    }, [props.playerOneMark, setGameStateWrapper]);
+    }, [props.playerOneMark, setGameStateWrapper, gameState.currentTurnMark, gameState.grid]);
+
+    const isPlayerOneTurn = gameState.currentTurnMark === props.playerOneMark;
+
+    useEffect(() => {
+        let nxtMoveCellNum: number;
+        if (
+            props.gameType !== "solo" || 
+            isPlayerOneTurn || 
+            (nxtMoveCellNum = getNxtMove(gameState.grid, gameState.currentTurnMark)) === -1
+        ) {
+            return;
+        }
+        // Some artificial delay so that the move played is not too quick
+        setTimeout(() => handleMovePlayed(nxtMoveCellNum), 500);
+    }, [props.gameType, isPlayerOneTurn, gameState.grid, gameState.currentTurnMark, handleMovePlayed]);
+
+    const handleRestart = () => {
+        setGameStateWrapper(prevGameState => ({
+            grid: INITIAL_GRID_STATE, 
+            currentTurnMark: prevGameState.initialTurnMark
+        }));
+        closeModal();
+    };
+
+    const handleNextRound = () => {
+        setGameStateWrapper(prevGameState => {
+            const newInitialTurnMark = toggleMark(prevGameState.initialTurnMark);
+            return {
+                grid: INITIAL_GRID_STATE,
+                initialTurnMark: newInitialTurnMark,
+                currentTurnMark: newInitialTurnMark
+            }
+        });
+        closeModal();
+    };
 
     const closeModal = () => setOpenModalType("none");
 

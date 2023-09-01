@@ -4,11 +4,9 @@ import { VisuallyHidden } from "./VisuallyHidden";
 import { X } from "./X";
 import { Zero } from "./Zero";
 import { assertNever, joinClasses } from "../helpers/general";
-import { GameGridState, MoveResult } from "../type-helpers/game-content";
+import { GameGridState } from "../type-helpers/game-content";
 // import { useLocalStorageState } from "../custom-hooks/useLocalStorageState";
-import { useCallback, useMemo } from "react";
 import { FlattenOneLvl } from "../type-helpers/general";
-import { getWinner } from "../helpers/game-content";
 
 type GameState = GameGridState;
 type PossibleMark = FlattenOneLvl<GameState>;
@@ -33,7 +31,7 @@ function getCellIcon(mark: PossibleMark) {
 type Props = {
     grid: GameGridState
     currentTurnMark: Mark,
-    onMovePlayed: (grid: GameGridState, moveResult: MoveResult) => void,
+    onMovePlayed: (gridCellNum: number) => void,
     isPlayerOneTurn: boolean
 };
 
@@ -48,24 +46,6 @@ export function GameContentMid(props: Props) {
         ) 
     });
     */
-    
-    // Workaround eslint exhaustive dependency list complain - React Hook useCallback has a missing dependency: 'props'
-    const onBtnClickExtDeps = useMemo(() => {
-        return {currentTurnMark: props.currentTurnMark, onMovePlayed: props.onMovePlayed};
-    }, [props.currentTurnMark, props.onMovePlayed]);
-
-    const onBtnClick = useCallback((cellNum: number) => {
-        let totalMarks = 0;
-        const newGameState: GameState = [];
-        for (let i = 0; i < props.grid.length; i += 1) {
-            const mark = props.grid[i];
-            newGameState.push(mark);
-            totalMarks += Number(mark !== "");
-        }
-        newGameState[cellNum] = onBtnClickExtDeps.currentTurnMark;
-        totalMarks += 1;
-        onBtnClickExtDeps.onMovePlayed(newGameState, totalMarks === props.grid.length ? "draw" : getWinner(newGameState));
-    }, [onBtnClickExtDeps, props.grid]);
 
     const sectionTitle = "game grid";
 
@@ -79,7 +59,7 @@ export function GameContentMid(props: Props) {
                 nativeBtnProps = {{
                     disabled: props.grid[cellNum] !== "",
                     type: "button",
-                    onClick: () => onBtnClick(cellNum),
+                    onClick: () => props.onMovePlayed(cellNum),
                     className: joinClasses(
                         "relative",
                         "justify-self-stretch",

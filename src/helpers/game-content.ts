@@ -75,12 +75,11 @@ function getMoveScore(
     }
     const result = getWinner(gameGridState);
     if (result !== "") {
-        const myPoint = Number(assignedMark === result);
-        return myPoint - (1 - myPoint);
+        return assignedMark === result ? 1 : -1;
     }
-    let [res, aggrFn] = [Infinity, Math.min];
+    let [res, aggrFn] = [-Infinity, Math.max];
     if (markToUse !== assignedMark) {
-        [res, aggrFn] = [-Infinity, Math.max];
+        [res, aggrFn] = [Infinity, Math.min];
     }
     for (let i = 0; i < gameGridState.length; i += 1) {
         if (gameGridState[i] === "") {
