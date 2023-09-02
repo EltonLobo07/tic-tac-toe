@@ -17,7 +17,9 @@ type Props = {
 
 export function GameContentMid(props: Props) {
     const sectionTitle = "game grid";
+    const gameOver = props.winingLine !== "none";
     const machineTurn = props.gameType === "solo" && !props.isPlayerOneTurn;
+    const gameOverOrMachineTurn = gameOver || machineTurn;
     const winingCellNums = winingLineToValidSet(props.winingLine);
 
     const cells: JSX.Element[] = [];
@@ -26,12 +28,12 @@ export function GameContentMid(props: Props) {
         cells.push(
             <GameGridBtn 
                 key = {cellNum}
-                hideIconOutline = {machineTurn}
+                hideIconOutline = {gameOverOrMachineTurn}
                 markAssigned = {props.grid[cellNum]}
                 swapBgAndTxtColor = {winingCellNums.has(cellNum as TillNumInclusive<9>)}
                 currentTurnMark = {props.currentTurnMark}
                 nativeBtnProps = {{
-                    disabled: props.grid[cellNum] !== "" || machineTurn,
+                    disabled: props.grid[cellNum] !== "" || gameOverOrMachineTurn,
                     type: "button",
                     onClick: () => props.onMovePlayed(cellNum),
                     className: joinClasses(
