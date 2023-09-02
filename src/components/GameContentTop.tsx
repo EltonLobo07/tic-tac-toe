@@ -1,5 +1,6 @@
+import { getPlayerOneMark } from "../helpers/game-content";
 import { joinClasses } from "../helpers/general";
-import { Mark } from "../type-helpers/app";
+import { Mark } from "../types/app";
 import { AppLogo } from "./AppLogo";
 import { Button } from "./Button";
 import { Restart } from "./Restart";
@@ -12,16 +13,6 @@ type Props = {
     isPlayerOneTurn: boolean,
     onRestart: () => void
 };
-
-function getPlayerOneMark(currentTurnMark: Mark, isPlayerOneTurn: boolean): Mark {
-    if (isPlayerOneTurn) {
-        return currentTurnMark;
-    }
-    if (currentTurnMark === "X") {
-        return "0";
-    }
-    return "X";
-}
 
 export function GameContentTop(props: Props) {
     const TurnIcon = props.currentTurnMark === "X" ? X : Zero;

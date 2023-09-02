@@ -1,6 +1,8 @@
-import { Mark } from "../type-helpers/app";
-import { GameGridState, Line, PossibleMark, Stats } from "../type-helpers/game-content";
-import { TillNumInclusive } from "../type-helpers/general";
+import { GameType, Mark } from "../types/app";
+import { GameGridState, GameState, Line, Modal, PossibleMark, Stats } from "../types/game-content";
+import { TillNumInclusive } from "../types/general";
+import { isMark } from "./app";
+import { assertNever } from "./general";
 
 export const STATS_KEYS = [
     "playerOneWins",
@@ -135,4 +137,131 @@ export function getNxtMove(gameGridState: GameGridState, assignedMark: Mark) {
         }
     }
     return mxCell;
+}
+
+export function isGrid(possibleGrid: unknown): possibleGrid is GameGridState {
+    return (
+        Array.isArray(possibleGrid) &&
+        possibleGrid.length === 9 &&
+        possibleGrid.every(value => value === "X" || value === "0" || value == "")
+    );
+}
+
+export function isGameState(possibleGameState: unknown): possibleGameState is GameState {
+    return (
+        typeof possibleGameState === "object" &&
+        possibleGameState !== null &&
+        "grid" in possibleGameState &&
+        isGrid(possibleGameState["grid"]) &&
+        "initialTurnMark" in possibleGameState &&
+        isMark(possibleGameState["initialTurnMark"]) &&
+        "currentTurnMark" in possibleGameState &&
+        isMark(possibleGameState["currentTurnMark"])
+    );
+}
+
+export const MODAL = [
+    "restart",
+    "winner-X",
+    "winner-0",
+    "tie",
+    "none"
+] as const;
+
+export function isModal(possibleModal: unknown): possibleModal is Modal {
+    return MODAL.find(modalStr => modalStr === possibleModal) !== undefined;
+}
+
+export function getPlayerWonKey(wonMark: Mark, playerOneMark: Mark): keyof Stats {
+    return wonMark === playerOneMark ? "playerOneWins" : "playerTwoWins";
+}
+
+export function getWinLoseMsg(isSoloGame: boolean, didPlayerOneWin: boolean): string {
+    if (isSoloGame) {
+        return didPlayerOneWin ? "you won!" : "oh no, you lost ...";
+    }
+    return `player ${didPlayerOneWin ? "1" : "2"} wins!`;
+}
+
+export function didXWin(winnerStr: `winner-${Mark}`): boolean {
+    return winnerStr[winnerStr.length - 1].toLowerCase() === "x";
+}
+
+export const LINE = [
+    "row-0",
+    "row-1",
+    "row-2",
+    "col-0",
+    "col-1",
+    "col-2",
+    "diag-0",
+    "diag-1",
+    "none"
+] as const;
+
+export function isLine(possibleLine: unknown): possibleLine is Line {
+    return LINE.find(line => line === possibleLine) !== undefined;
+}
+
+export function winingLineToValidSet(winingLine: Line): Set<TillNumInclusive<9>> {
+    let lst: TillNumInclusive<9>[] = [];
+    switch (winingLine) {
+        case "row-0": {
+            lst = [0, 1, 2];
+            break;
+        }
+        case "row-1": {
+            lst = [3, 4, 5];
+            break;
+        }
+        case "row-2": {
+            lst = [6, 7, 8];
+            break;
+        }
+        case "col-0": {
+            lst = [0, 3, 6];
+            break;
+        }
+        case "col-1": {
+            lst = [1, 4, 7];
+            break;
+        }
+        case "col-2": {
+            lst = [2, 5, 8];
+            break;
+        }
+        case "diag-0": {
+            lst = [0, 4, 8];
+            break;
+        }
+        case "diag-1": {
+            lst = [2, 4, 6];
+            break;
+        }
+        case "none": {
+            break;
+        }
+        default: {
+            assertNever(winingLine, `Not handled type - winingLine: ${winingLine}`);
+        }
+    }
+    return new Set(lst);
+}
+
+export function getPlayerDisplayInfo(isPlayerOneMarkEqual: boolean, gameType: GameType): string {
+    let res = `p${isPlayerOneMarkEqual ? "1" : "2"}`;
+    if (gameType === "solo") {
+        res = isPlayerOneMarkEqual ? "you" : "cpu";
+    }
+    return res.toUpperCase();
+}
+
+export function getPlayerOneMark(currentTurnMark: Mark, isPlayerOneTurn: boolean): Mark {
+    if (isPlayerOneTurn) {
+        return currentTurnMark;
+    }
+    if (currentTurnMark === "X") {
+        return "0";
+    }
+    return "X";
 }

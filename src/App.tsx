@@ -2,27 +2,11 @@ import { GameContent } from "./components/GameContent";
 import { MaxWidthWrapper } from "./components/MaxWidthWrapper";
 import { NewGameMenuContent } from "./components/NewGameMenuContent";
 import { VisuallyHidden } from "./components/VisuallyHidden";
-import { GameType, Mark } from "./type-helpers/app";
-
-// import { useLocalStorageState } from "./custom-hooks/useLocalStorageState";
-// import { /*GAME_TYPE,*/ isMark } from "./helpers/app";
-
-import { useState } from "react";
-
-const NOT_SELECTED = "not-selected";
-
-type GameTypeState = GameType | typeof NOT_SELECTED;
-
-/*
-function isGameTypeState(possibleGameTypeState: unknown): possibleGameTypeState is GameTypeState {
-  return [...GAME_TYPE, NOT_SELECTED].find(gameTypeState => gameTypeState === possibleGameTypeState) !== undefined;
-}
-*/
+import { GameTypeState, Mark } from "./types/app";
+import { useLocalStorageState } from "./custom-hooks/useLocalStorageState";
+import { NOT_SELECTED, isGameTypeState, isMark } from "./helpers/app";
 
 export function App() {
-  const [playerOneMark, setPlayerOneMark] = useState<Mark>("X");
-  const [gameType, setGameType] = useState<GameTypeState>(NOT_SELECTED);
-  /*
   const [playerOneMark, setPlayerOneMark] = useLocalStorageState<Mark>({
     initialState: "X",
     lsKey: "playerOneMark",
@@ -33,7 +17,6 @@ export function App() {
     lsKey: "gameType",
     isState: isGameTypeState
   });
-  */
 
   let sectionTitleAndContent = {
     title: "new game menu",

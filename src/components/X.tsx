@@ -1,5 +1,5 @@
 import { getSvgAriaProps, getSvgPathStyleProps } from "../helpers/svg-icon-components";
-import { IconComponentProps } from "../type-helpers/svg-icon-components";
+import { IconComponentProps } from "../types/svg-icon-components";
 
 export function X(props: IconComponentProps) {
     return (

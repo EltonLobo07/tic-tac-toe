@@ -1,5 +1,5 @@
 import { Dialog as HUIDialog } from '@headlessui/react';
-import { ValidChild } from '../type-helpers/general';
+import { ValidChild } from '../types/general';
 import { twMerge } from 'tailwind-merge';
 
 type Props = {

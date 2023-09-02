@@ -1,5 +1,5 @@
-import { KeyValueMap } from "../type-helpers/general";
-import { IconComponentProps, SVGPathAttrs, SVGPathStrokeConfig } from "../type-helpers/svg-icon-components";
+import { KeyValueMap } from "../types/general";
+import { IconComponentProps, SVGPathAttrs, SVGPathStrokeConfig } from "../types/svg-icon-components";
 
 export function getSvgPathStyleProps(
     color: string, 

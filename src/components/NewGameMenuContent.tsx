@@ -1,15 +1,11 @@
 import { joinClasses } from "../helpers/general";
-import { GameType, Mark } from "../type-helpers/app";
+import { GameType, Mark } from "../types/app";
 import { AppLogo } from "./AppLogo";
 import { Button } from "./Button";
 import { RadioBtn } from "./RadioBtn";
 import { VisuallyHidden } from "./VisuallyHidden";
 import { X } from "./X";
 import { Zero } from "./Zero";
-
-function getRadioBtnHoverBgColor(btnSelected: boolean): string {
-    return btnSelected ? "" : "bg-dark-gray-hovered";
-}
 
 type Props = {
     playerOneMark: Mark,
@@ -37,6 +33,10 @@ export function NewGameMenuContent(props: Props) {
     const markSelectFieldsetLegendTxt = "pick player 1's mark"; 
     const is0MarkSelected = props.playerOneMark === "0";
     const isXMarkSelected = !is0MarkSelected;
+
+    function getRadioBtnHoverBgColor(btnSelected: boolean): string {
+        return btnSelected ? "" : "bg-dark-gray-hovered";
+    }
 
     return (
         <div

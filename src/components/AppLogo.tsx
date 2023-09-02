@@ -1,4 +1,4 @@
-import { IconComponentProps } from "../type-helpers/svg-icon-components";
+import { IconComponentProps } from "../types/svg-icon-components";
 import { VisuallyHidden } from "./VisuallyHidden";
 import { X } from "./X";
 import { Zero } from "./Zero";

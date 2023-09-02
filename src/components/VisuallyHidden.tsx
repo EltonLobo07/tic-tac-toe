@@ -1,4 +1,4 @@
-import { ValidChild } from "../type-helpers/general";
+import { ValidChild } from "../types/general";
 
 type Props = {
     children: ValidChild

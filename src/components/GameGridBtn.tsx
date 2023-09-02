@@ -1,29 +1,11 @@
 import { twMerge } from "tailwind-merge";
-import { assertNever, joinClasses } from "../helpers/general";
-import { Mark } from "../type-helpers/app";
-import { PossibleMark } from "../type-helpers/game-content";
+import { joinClasses } from "../helpers/general";
+import { Mark } from "../types/app";
+import { PossibleMark } from "../types/game-content";
 import { Button } from "./Button";
 import { VisuallyHidden } from "./VisuallyHidden";
-import { X } from "./X";
-import { Zero } from "./Zero";
 import { useState } from "react";
-
-function getCellIcon(mark: PossibleMark) {
-    switch (mark) {
-        case "X": {
-            return X;
-        } 
-        case "0": {
-            return Zero;
-        }
-        case "": {
-            return;
-        }
-        default: {
-            assertNever(mark, `Not handled type - mark: ${mark}`);
-        }
-    }
-}
+import { getCellIcon } from "../helpers/game-grid-button";
 
 type Props = {
     markAssigned: PossibleMark,

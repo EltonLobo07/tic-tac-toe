@@ -1,4 +1,4 @@
-import { GameType, Mark } from "../type-helpers/app";
+import { GameType, GameTypeState, Mark } from "../types/app";
 
 export const MARK = [
     "X",
@@ -16,4 +16,10 @@ export const GAME_TYPE = [
 
 export function isGameType(possibleGameType: unknown): possibleGameType is GameType {
     return GAME_TYPE.find(gameType => gameType === possibleGameType) !== undefined;
+}
+
+export const NOT_SELECTED = "not-selected";
+
+export function isGameTypeState(possibleGameTypeState: unknown): possibleGameTypeState is GameTypeState {
+    return [...GAME_TYPE, NOT_SELECTED].find(gameTypeState => gameTypeState === possibleGameTypeState) !== undefined;
 }

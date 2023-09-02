@@ -1,16 +1,9 @@
+import { getPlayerDisplayInfo } from "../helpers/game-content";
 import { joinClasses } from "../helpers/general";
-import { GameType, Mark } from "../type-helpers/app";
-import { Stats } from "../type-helpers/game-content";
+import { GameType, Mark } from "../types/app";
+import { Stats } from "../types/game-content";
 import { TxtAndNum } from "./TxtAndNum";
 import { VisuallyHidden } from "./VisuallyHidden";
-
-function getPlayerDisplayInfo(isPlayerOneMarkEqual: boolean, gameType: GameType): string {
-    let res = `p${isPlayerOneMarkEqual ? "1" : "2"}`;
-    if (gameType === "solo") {
-        res = isPlayerOneMarkEqual ? "you" : "cpu";
-    }
-    return res.toUpperCase();
-}
 
 type Props = {
     playerOneMark: Mark,

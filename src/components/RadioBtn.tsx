@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import { VisuallyHidden } from "./VisuallyHidden";
-import { ValidChild } from "../type-helpers/general";
+import { ValidChild } from "../types/general";
 import { useState } from "react";
 
 type Props = {

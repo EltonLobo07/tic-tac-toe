@@ -1,5 +1,5 @@
 import { getSvgAriaProps } from "../helpers/svg-icon-components";
-import { IconComponentProps } from "../type-helpers/svg-icon-components";
+import { IconComponentProps } from "../types/svg-icon-components";
 
 export function Restart(props: Omit<IconComponentProps, "type">) {
     return (

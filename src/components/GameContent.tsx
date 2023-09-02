@@ -1,6 +1,6 @@
 import { assertNever, joinClasses } from "../helpers/general";
-import { GameType, Mark } from "../type-helpers/app";
-import { GameGridState, Line, Stats } from "../type-helpers/game-content";
+import { GameType, Mark } from "../types/app";
+import { GameGridState, GameState, Line, Modal, Stats } from "../types/game-content";
 import { Dialog, DialogProps } from "./Dialog";
 import { GameContentBottom } from "./GameContentBottom";
 import { GameContentMid } from "./GameContentMid";
@@ -8,38 +8,10 @@ import { GameContentTop } from "./GameContentTop";
 import { YesNoBtns, YesNoBtnsProps } from "./YesNoBtns";
 import { X } from "./X";
 import { Zero } from "./Zero";
-/*
 import { useLocalStorageState } from "../custom-hooks/useLocalStorageState";
-import { isMark } from "../helpers/app";
-import { isStats } from "../helpers/game-content";
-*/
-import { useState, useCallback, useEffect } from "react";
+import { didXWin, getPlayerWonKey, getWinLoseMsg, isGameState, isLine, isModal, isStats } from "../helpers/game-content";
+import { useCallback, useEffect } from "react";
 import { INITIAL_GRID_STATE, getNxtMove, getWinner, toggleMark } from "../helpers/game-content";
-
-function getPlayerWonKey(wonMark: Mark, playerOneMark: Mark): keyof Stats {
-    return wonMark === playerOneMark ? "playerOneWins" : "playerTwoWins";
-}
-
-function getWinLoseMsg(isSoloGame: boolean, didPlayerOneWin: boolean): string {
-    if (isSoloGame) {
-        return didPlayerOneWin ? "you won!" : "oh no, you lost ...";
-    }
-    return `player ${didPlayerOneWin ? "1" : "2"} wins!`;
-}
-
-function didXWin(winnerStr: `winner-${Mark}`): boolean {
-    return winnerStr[winnerStr.length - 1].toLowerCase() === "x";
-}
-
-const MODAL = [
-    "restart",
-    "winner-X",
-    "winner-0",
-    "tie",
-    "none"
-] as const;
-
-type Modal = typeof MODAL[number];
 
 type Props = {
     playerOneMark: Mark,
@@ -47,50 +19,28 @@ type Props = {
     onQuit: () => void
 };
 
-type GameState = {
-    grid: GameGridState,
-    initialTurnMark: Mark,
-    currentTurnMark: Mark 
-};
-
 export function GameContent(props: Props) {
-    const [gameState, setGameState] = useState<GameState>(() => {
-        const initialTurnMark = "X";
-        return {
-            grid: INITIAL_GRID_STATE,
-            initialTurnMark,
-            currentTurnMark: initialTurnMark
-        };
+    const [gameState, setGameState] = useLocalStorageState<GameState>({
+        initialState: () => {
+            const initialTurnMark = "X";
+            return {
+                grid: INITIAL_GRID_STATE,
+                initialTurnMark,
+                currentTurnMark: initialTurnMark
+            };    
+        },
+        lsKey: "gameState",
+        isState: isGameState
+    }); 
+    const [winingLine, setWiningLine] = useLocalStorageState<Line>({
+        initialState: "none",
+        lsKey: "winingLine",
+        isState: isLine
     });
-    const [openModalType, setOpenModalType] = useState<Modal>("none");
-    const [stats, setStats] = useState<Stats>({
-        playerOneWins: 0,
-        ties: 0,
-        playerTwoWins: 0
-    });
-    const [winingLine, setWiningLine] = useState<Line>("none");
-
-    /*
     const [openModalType, setOpenModalType] = useLocalStorageState<Modal>({
         initialState: "none",
         lsKey: "openModalType",
-        isState: (possibleState): possibleState is Modal => MODAL.find(modalStr => modalStr === possibleState) !== undefined
-    });
-    const [initialTurnMark, setInitialTurnMark] = useLocalStorageState<Mark>({
-        initialState: "X",
-        lsKey: "initialTurnMark",
-        isState: isMark
-    });
-    const [currentTurnMark, setCurrentTurnMark] = useLocalStorageState<Mark>({
-        initialState: initialTurnMark,
-        lsKey: "currentTurnMark",
-        isState: isMark
-    });
-    // This state will be used to reset the game grid's state
-    const [gameGridKey, setGameGridKey] = useLocalStorageState({
-        initialState: Date.now(),
-        lsKey: "gameGridKey",
-        isState: (possibleState): possibleState is number => typeof possibleState === "number" && possibleState > 0
+        isState: isModal
     });
     const [stats, setStats] = useLocalStorageState<Stats>({
         initialState: {
@@ -101,7 +51,6 @@ export function GameContent(props: Props) {
         lsKey: "stats",
         isState: isStats
     });
-    */
 
     const setGameStateWrapper = useCallback(
         (
@@ -112,7 +61,7 @@ export function GameContent(props: Props) {
                 ...(typeof newGameState === "function" ? newGameState(prevGameState) : newGameState)
             }));
         }, 
-    []);
+    [setGameState]);
 
     const handleMovePlayed = useCallback((gridCellNum: number) => {
         let totalMarks = 0;
@@ -162,7 +111,7 @@ export function GameContent(props: Props) {
                 assertNever(moveResult, `Not handled - moveResult type: ${moveResult}`);
             }
         }
-    }, [props.playerOneMark, setGameStateWrapper, gameState.currentTurnMark, gameState.grid]);
+    }, [props.playerOneMark, setWiningLine, setGameStateWrapper, gameState.currentTurnMark, gameState.grid, setOpenModalType, setStats]);
 
     const isPlayerOneTurn = gameState.currentTurnMark === props.playerOneMark;
 

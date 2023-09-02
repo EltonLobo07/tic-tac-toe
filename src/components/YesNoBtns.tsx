@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import { Button } from "./Button";
-import { ValidChild } from "../type-helpers/general";
+import { ValidChild } from "../types/general";
 import { joinClasses } from "../helpers/general";
 
 type BtnProps = {

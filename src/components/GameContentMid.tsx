@@ -1,55 +1,10 @@
-import { GameType, Mark } from "../type-helpers/app";
+import { GameType, Mark } from "../types/app";
 import { VisuallyHidden } from "./VisuallyHidden";
-import { assertNever, joinClasses } from "../helpers/general";
-import { GameGridState, Line } from "../type-helpers/game-content";
-// import { useLocalStorageState } from "../custom-hooks/useLocalStorageState";
+import { joinClasses } from "../helpers/general";
+import { GameGridState, Line } from "../types/game-content";
 import { GameGridBtn } from "./GameGridBtn";
-import { TillNumInclusive } from "../type-helpers/general";
-
-function winingLineToValidSet(winingLine: Line): Set<TillNumInclusive<9>> {
-    let lst: TillNumInclusive<9>[] = [];
-    switch (winingLine) {
-        case "row-0": {
-            lst = [0, 1, 2];
-            break;
-        }
-        case "row-1": {
-            lst = [3, 4, 5];
-            break;
-        }
-        case "row-2": {
-            lst = [6, 7, 8];
-            break;
-        }
-        case "col-0": {
-            lst = [0, 3, 6];
-            break;
-        }
-        case "col-1": {
-            lst = [1, 4, 7];
-            break;
-        }
-        case "col-2": {
-            lst = [2, 5, 8];
-            break;
-        }
-        case "diag-0": {
-            lst = [0, 4, 8];
-            break;
-        }
-        case "diag-1": {
-            lst = [2, 4, 6];
-            break;
-        }
-        case "none": {
-            break;
-        }
-        default: {
-            assertNever(winingLine, `Not handled type - winingLine: ${winingLine}`);
-        }
-    }
-    return new Set(lst);
-}
+import { TillNumInclusive } from "../types/general";
+import { winingLineToValidSet } from "../helpers/game-content";
 
 type Props = {
     grid: GameGridState
@@ -61,17 +16,6 @@ type Props = {
 };
 
 export function GameContentMid(props: Props) {
-    /*
-    const [gameState, setGameState] = useLocalStorageState<GameState>({
-        initialState: new Array(NUM_CELLS).fill(""),
-        lsKey: "gameState",
-        isState: (possibleState): possibleState is GameState => (
-            Array.isArray(possibleState) &&
-            possibleState.find(cellState => cellState !== "X" || cellState !== "0" || cellState !== "") !== undefined
-        ) 
-    });
-    */
-
     const sectionTitle = "game grid";
     const machineTurn = props.gameType === "solo" && !props.isPlayerOneTurn;
     const winingCellNums = winingLineToValidSet(props.winingLine);
