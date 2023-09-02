@@ -1,5 +1,6 @@
 import { Mark } from "../type-helpers/app";
-import { GameGridState, PossibleMark, Stats } from "../type-helpers/game-content";
+import { GameGridState, Line, PossibleMark, Stats } from "../type-helpers/game-content";
+import { TillNumInclusive } from "../type-helpers/general";
 
 export const STATS_KEYS = [
     "playerOneWins",
@@ -30,7 +31,19 @@ function convertMarkToNum(mark: PossibleMark): number {
     return isMarkXNum + Number(mark === "0") * (1 - isMarkXNum) * (-1);
 }
 
-export function getWinner(gameState: GameGridState): PossibleMark {
+function assertNumZeroOne(num: number): asserts num is TillNumInclusive<1> {
+    if (num < 0 || num > 1) {
+        throw new Error("The number is not 0 or 1");
+    }
+}
+
+function assertNumZeroOneTwo(num: number): asserts num is TillNumInclusive<2> {
+    if (num < 0 || num > 2) {
+        throw new Error("The number is not 0, 1 or 2");
+    }
+}
+
+export function getWinner(gameState: GameGridState): [PossibleMark, Line] {
     const rows = [0, 0, 0];
     const cols = [0, 0, 0];
     const diagonals = [0, 0];
@@ -49,12 +62,24 @@ export function getWinner(gameState: GameGridState): PossibleMark {
         ["0", v => v === -3]
     ];
     for (let i = 0; i < tmp.length; i += 1) {
-        const test = tmp[i][1];
-        if (rows.some(test) || cols.some(test) || diagonals.some(test)) {
-            return tmp[i][0];
+        const [mark, test] = tmp[i];
+        if (rows.findIndex(test) > -1) {
+            const rowIdx = rows.findIndex(test);
+            assertNumZeroOneTwo(rowIdx)
+            return [mark, `row-${rowIdx}`];
+        }
+        if (cols.findIndex(test) > -1) {
+            const colIdx = cols.findIndex(test);
+            assertNumZeroOneTwo(colIdx);
+            return [mark, `col-${colIdx}`];
+        }
+        if (diagonals.findIndex(test) > -1) {
+            const diagIdx = diagonals.findIndex(test);
+            assertNumZeroOne(diagIdx);
+            return [mark, `diag-${diagIdx}`];
         }
     } 
-    return "";
+    return ["", "none"];
 }
 
 function tieCheck(gameGridState: GameGridState): boolean {
@@ -70,7 +95,7 @@ function getMoveScore(
     markToUse: Mark,
     assignedMark: Mark
 ): number {
-    const result = getWinner(gameGridState);
+    const result = getWinner(gameGridState)[0];
     if (result !== "") {
         return assignedMark === result ? 1 : -1;
     }
@@ -93,7 +118,7 @@ function getMoveScore(
 }
 
 export function getNxtMove(gameGridState: GameGridState, assignedMark: Mark) {
-    if (getWinner(gameGridState) !== "") {
+    if (getWinner(gameGridState)[0] !== "") {
         return -1;
     }
     const newGameGridState = [...gameGridState];

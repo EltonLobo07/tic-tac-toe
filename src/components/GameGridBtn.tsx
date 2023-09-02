@@ -29,6 +29,7 @@ type Props = {
     markAssigned: PossibleMark,
     currentTurnMark: Mark,
     hideIconOutline?: boolean,
+    swapBgAndTxtColor?: boolean,
     nativeBtnProps?: Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "onMouseEnter" | "onMouseOut">
 };
 
@@ -39,16 +40,25 @@ export function GameGridBtn(props: Props) {
     const TurnIcon = getCellIcon(props.currentTurnMark);
     const commonIconClassNames = "translate-y-[calc(var(--box-shadow-y-neg-offset)/2)] w-10 h-10 tabAndUp:w-16 tabAndUp:h-16";
 
+    const applyXColor = props.markAssigned === "X" || 
+    props.markAssigned === "" && props.currentTurnMark === "X"; 
+
     return (
         <Button
             nativeBtnProps = {{
                 ...props.nativeBtnProps,
                 className: twMerge(
                     "relative",
-                    props.markAssigned === "X" || 
-                    props.markAssigned === "" && props.currentTurnMark === "X" 
-                    ? "text-blue-more-green" 
-                    : "text-dark-yellow",
+                    props.swapBgAndTxtColor 
+                    ? applyXColor 
+                      ? "bg-blue-more-green" 
+                      : "bg-dark-yellow" 
+                    : "bg-almost-black-green",
+                    props.swapBgAndTxtColor
+                    ? "text-almost-black-green"
+                    : applyXColor 
+                      ? "text-blue-more-green" 
+                      : "text-dark-yellow",
                     props.nativeBtnProps?.className
                 ),
                 onMouseEnter: () => setShowMarkIconOutline(true),

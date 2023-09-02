@@ -1,6 +1,6 @@
 import { assertNever, joinClasses } from "../helpers/general";
 import { GameType, Mark } from "../type-helpers/app";
-import { GameGridState, Stats } from "../type-helpers/game-content";
+import { GameGridState, Line, Stats } from "../type-helpers/game-content";
 import { Dialog, DialogProps } from "./Dialog";
 import { GameContentBottom } from "./GameContentBottom";
 import { GameContentMid } from "./GameContentMid";
@@ -68,6 +68,7 @@ export function GameContent(props: Props) {
         ties: 0,
         playerTwoWins: 0
     });
+    const [winingLine, setWiningLine] = useState<Line>("none");
 
     /*
     const [openModalType, setOpenModalType] = useLocalStorageState<Modal>({
@@ -124,7 +125,7 @@ export function GameContent(props: Props) {
         newGrid[gridCellNum] = gameState.currentTurnMark;
         totalMarks += 1;
         setGameStateWrapper({grid: newGrid});
-        const winnerMark = getWinner(newGrid);
+        const [winnerMark, line] = getWinner(newGrid);
         const gameTied = winnerMark === "" && totalMarks === gameState.grid.length;
         const moveResult = gameTied ? "draw" : winnerMark;
         /*
@@ -142,12 +143,14 @@ export function GameContent(props: Props) {
                 const playerWonKey = getPlayerWonKey("X", props.playerOneMark);
                 setStats(stats => ({...stats, [playerWonKey]: stats[playerWonKey] + 1}));
                 setOpenModalType("winner-X");
+                setWiningLine(line);
                 return;
             } 
             case "0": {
                 const playerWonKey = getPlayerWonKey("0", props.playerOneMark);
                 setStats(stats => ({...stats, [playerWonKey]: stats[playerWonKey] + 1})); 
                 setOpenModalType("winner-0");
+                setWiningLine(line);
                 return;
             }
             case "draw": {
@@ -181,6 +184,7 @@ export function GameContent(props: Props) {
             grid: INITIAL_GRID_STATE, 
             currentTurnMark: prevGameState.initialTurnMark
         }));
+        resetWiningLine();
         closeModal();
     };
 
@@ -193,8 +197,11 @@ export function GameContent(props: Props) {
                 currentTurnMark: newInitialTurnMark
             }
         });
+        resetWiningLine();
         closeModal();
     };
+
+    const resetWiningLine = () => setWiningLine("none");
 
     const closeModal = () => setOpenModalType("none");
 
@@ -310,6 +317,8 @@ export function GameContent(props: Props) {
                 onMovePlayed = {handleMovePlayed}
                 isPlayerOneTurn = {isPlayerOneTurn}
                 gameType = {props.gameType}
+                winingLine = {winingLine}
+                
             />
             <GameContentBottom
                 playerOneMark = {props.playerOneMark}
