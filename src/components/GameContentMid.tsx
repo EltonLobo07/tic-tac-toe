@@ -75,7 +75,6 @@ export function GameContentMid(props: Props) {
     const sectionTitle = "game grid";
     const machineTurn = props.gameType === "solo" && !props.isPlayerOneTurn;
     const winingCellNums = winingLineToValidSet(props.winingLine);
-    console.log("Todo:", winingCellNums); 
 
     const cells: JSX.Element[] = [];
     // cellNum won't change, its safe to assign key to the index

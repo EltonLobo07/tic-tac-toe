@@ -7,6 +7,10 @@ import { VisuallyHidden } from "./VisuallyHidden";
 import { X } from "./X";
 import { Zero } from "./Zero";
 
+function getRadioBtnHoverBgColor(btnSelected: boolean): string {
+    return btnSelected ? "" : "bg-dark-gray-hovered";
+}
+
 type Props = {
     playerOneMark: Mark,
     onPlayerOneMarkChange: (newMark: Mark) => void,
@@ -16,7 +20,7 @@ type Props = {
 export function NewGameMenuContent(props: Props) {
     const getMarkRadioBtnClassNames = (markSelected: boolean) => joinClasses(
         "flex-grow rounded-8px p-12px",
-        markSelected ? "bg-silver text-almost-black" : "bg-almost-black hover:bg-dark-gray-almost-transparent text-silver"
+        markSelected ? "bg-silver text-almost-black" : "bg-almost-black text-silver"
     );
 
     const commonProps = {
@@ -71,6 +75,7 @@ export function NewGameMenuContent(props: Props) {
                         onChange = {() => props.onPlayerOneMarkChange("X")}
                         name = {commonProps.customRadioBtnName}
                         className = {getMarkRadioBtnClassNames(isXMarkSelected)}
+                        classNamesOnHover = {getRadioBtnHoverBgColor(isXMarkSelected)}
                     >
                         <X 
                             className = {commonProps.iconComponentClassNames}
@@ -82,6 +87,7 @@ export function NewGameMenuContent(props: Props) {
                         onChange = {() => props.onPlayerOneMarkChange("0")}
                         name = {commonProps.customRadioBtnName}
                         className = {getMarkRadioBtnClassNames(is0MarkSelected)}
+                        classNamesOnHover = {getRadioBtnHoverBgColor(is0MarkSelected)}
                     >
                         <Zero 
                             className = {commonProps.iconComponentClassNames}

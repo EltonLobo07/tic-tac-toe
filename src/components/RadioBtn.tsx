@@ -1,6 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import { VisuallyHidden } from "./VisuallyHidden";
 import { ValidChild } from "../type-helpers/general";
+import { useState } from "react";
 
 type Props = {
     label: string,
@@ -8,15 +9,21 @@ type Props = {
     children: ValidChild,
     checked: boolean,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
-    className?: string
+    className?: string,
+    classNamesOnHover?: string
 };
 
 export function RadioBtn(props: Props) {
+    const [hovered, setHovered] = useState(false);
+
     return (
         <div
+            onMouseEnter = {() => setHovered(true)}
+            onMouseLeave = {() => setHovered(false)}
             className = {twMerge(
                 "w-full relative bg-white",
-                props.className
+                props.className,
+                hovered && props.classNamesOnHover
             )}
         >
             <label
